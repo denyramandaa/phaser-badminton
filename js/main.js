@@ -18,7 +18,13 @@ window.onload = function() {
         width: w,
         height: h,
         parent: 'phaser-game',
-        scene: [SceneLoad, SceneTitle, SceneInstructions, SceneSettings, SceneMain, SceneOver]
+        scene: [SceneLoad, SceneTitle, SceneInstructions, SceneSettings, SceneMain, SceneOver],
+        physics: {
+            default: 'arcade',
+            arcade: {
+                debug: true
+            }
+        }
     };
     mt = {};
     mt.model = new Model();

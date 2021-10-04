@@ -7,6 +7,7 @@ class SceneMain extends Phaser.Scene {
         
     }
     create() {
+        this.hitStatus = false
         this.back = this.add.image(0, 0, "court");
         this.back.setOrigin(0, 0);
         this.back.displayWidth = game.config.width;
@@ -18,12 +19,14 @@ class SceneMain extends Phaser.Scene {
         });
     //    this.aGrid.showNumbers();
 
-       this.shuttlecock = this.add.image(0,0,"shuttlecock")
-       Align.scaleToGameW(this.shuttlecock, .025);
-       this.aGrid.placeAtIndex(16, this.shuttlecock);
+       this.shuttlecockGroup = this.physics.add.group()
+
+       this.createShuttleCock()
+       this.time.addEvent({ delay: 2000, callback: this.createShuttleCock, callbackScope: this, loop: true });
 
 
-       this.player = this.add.sprite(0,0,"player")
+       this.player = this.physics.add.sprite(0,0,"player")
+       this.player.setImmovable()
        this.player.setOrigin(0.5, 0.5);
        Align.scaleToGameW(this.player, .15);
        this.aGrid.placeAtIndex(71, this.player);
@@ -33,13 +36,44 @@ class SceneMain extends Phaser.Scene {
             frames: [
                 { key: 'player',frame:0 },
                 { key: 'player',frame:1 },
+                { key: 'player',frame:0 },
             ],
             frameRate: 8,
-            repeat: -1
+            repeat: 0
         });
-        this.player.play('hit');
 
         this.cursors = game.input.keyboard.createCursorKeys();
+
+        this.physics.add.overlap(this.player, this.shuttlecockGroup, this.hitBall, null, this)
+
+        this.keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    }
+    hitBall(player, ball) {
+        if(this.hitStatus) {
+            ball.setVelocityY(-100)
+            ball.angle = 180
+        }
+    }
+    stopHit() {
+        this.player.animations.stop(null)
+    }
+    createShuttleCock() {
+        const xx=Phaser.Math.Between(0,game.config.width)
+        const yy=0
+
+        let shuttlecock = this.physics.add.sprite(0,0,"shuttlecock")
+        this.shuttlecockGroup.add(shuttlecock)
+        shuttlecock.x = xx
+        shuttlecock.y = yy
+        
+        Align.scaleToGameW(shuttlecock, .025);
+
+        shuttlecock.setVelocityY(100)
+        shuttlecock.setVelocityX(10)
+
+    }
+    statusHitToFalse() {
+        this.hitStatus = false
     }
     update() {
         if (this.cursors.left.isDown)
@@ -62,5 +96,21 @@ class SceneMain extends Phaser.Scene {
             if(this.player.y >= game.config.height/1.3) return
             this.player.y+=2;
         }
+
+        if (this.keySpace.isDown)
+        {
+            if(this.hitStatus) return
+            this.hitStatus = true
+            this.player.play('hit', true);
+            this.time.addEvent({ delay: 500, callback: this.statusHitToFalse, callbackScope: this, loop: false });
+        }
+
+        this.shuttlecockGroup.children.iterate(function(child) {
+            if(child) {
+                if(child.y>game.config.height || child.y<-100) {
+                    child.destroy()
+                }
+            }
+        }.bind(this))
     }
 }
