@@ -58,7 +58,7 @@ class SceneMain extends Phaser.Scene {
         this.player.animations.stop(null)
     }
     createShuttleCock() {
-        const xx=Phaser.Math.Between(0,game.config.width)
+        const xx=game.config.width/2
         const yy=0
 
         let shuttlecock = this.physics.add.sprite(0,0,"shuttlecock")
@@ -69,8 +69,8 @@ class SceneMain extends Phaser.Scene {
         Align.scaleToGameW(shuttlecock, .025);
 
         shuttlecock.setVelocityY(100)
-        shuttlecock.setVelocityX(10)
-
+        const randX = Phaser.Math.Between(game.config.width/5,game.config.width/1.25)
+        this.tweens.add({targets: shuttlecock,duration: 5000,x:randX});
     }
     statusHitToFalse() {
         this.hitStatus = false
