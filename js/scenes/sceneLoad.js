@@ -24,13 +24,11 @@ class SceneLoad extends Phaser.Scene {
         this.load.image("court", "images/court.jpg");
         this.load.image("shuttlecock", "images/shuttlecock.png");
         this.load.spritesheet("player", "images/player.png", {frameWidth: 100, frameHeight:178});
-        //
-        //
-        //
-       /* this.load.audio("right", "audio/right.wav");
-        this.load.audio("wrong", "audio/wrong.wav");
-        this.load.audio("levelUp", "audio/levelUp.wav");
-        this.load.audio("background", "audio/background.mp3");*/
+
+        this.load.audio("hit", "audio/hit.mp3");
+        this.load.audio("swing", "audio/swing.mp3");
+        this.load.audio("serve", "audio/serve.mp3");
+        this.load.audio("background", "audio/background.mp3");
     }
     create() {
         mt.emitter = new Phaser.Events.EventEmitter();
