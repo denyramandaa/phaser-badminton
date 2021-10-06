@@ -33,6 +33,10 @@ class SceneMain extends Phaser.Scene {
         });
     //    this.aGrid.showNumbers();
 
+        this.shuttlecockLeftText=this.add.text(0,0,"Counter: "+this.maxCounter)
+        this.shuttlecockLeftText.setOrigin(0.5,0.5)
+        this.aGrid.placeAtIndex(8, this.shuttlecockLeftText)
+
        this.shuttlecockGroup = this.physics.add.group()
        this.createShuttleCock()
        this.time.addEvent({ delay: mt.model.respawnSpeed, callback: this.createShuttleCock, callbackScope: this, loop: true });
@@ -61,10 +65,6 @@ class SceneMain extends Phaser.Scene {
 
         this.physics.add.overlap(this.player, this.shuttlecockGroup, this.hitBall, null, this)
 
-        this.scoreText=this.add.text(0,0,"Score: 0 - 0")
-        this.scoreText.setOrigin(0.5,0.5)
-        this.aGrid.placeAtIndex(8, this.scoreText)
-
         this.timerText=this.add.text(0,0,"Timer: 0")
         this.timerText.setOrigin(0.5,0.5)
         this.aGrid.placeAtIndex(2, this.timerText)
@@ -79,25 +79,27 @@ class SceneMain extends Phaser.Scene {
     hitBall(player, ball) {
         if(this.hitStatus && this.holdHitPoint) {
             mt.mediaManager.playSound("hit")
-            ball.setVelocityY(-100)
+            ball.setVelocityY(-150)
             ball.angle = 180
-            const _self = this
             setTimeout(function() {
                 if(ball) { 
                     ball.destroy()
-                    _self.playerScore+=1
-                    _self.updateText()
                 }
             },1000)
         }
     }
-    updateText() {
-        this.scoreText.setText("Score: "+this.playerScore + " - " + this.enemyScore)
+    updateText(con) {
+        this.shuttlecockLeftText.setText("Counter: "+con)
     }
     createShuttleCock() {
         if(this.gameIsDone) return
+        this.shuttlecockCounter++
         const xx=game.config.width/2
         const yy=0
+
+        
+        const leftSc = this.maxCounter - this.shuttlecockCounter
+        this.updateText(leftSc)
 
         let shuttlecock = this.physics.add.sprite(0,0,"shuttlecock")
         this.shuttlecockGroup.add(shuttlecock)
@@ -107,11 +109,10 @@ class SceneMain extends Phaser.Scene {
         Align.scaleToGameW(shuttlecock, .025);
         mt.mediaManager.playSound("serve")
 
-        const randVelo = Phaser.Math.Between(150, 220)
+        const randVelo = Phaser.Math.Between(160, 250)
         shuttlecock.setVelocityY(randVelo)
-        const randX = Phaser.Math.Between(game.config.width/5,game.config.width/1.25)
-        this.tweens.add({targets: shuttlecock,duration:2500,x:randX});
-        this.shuttlecockCounter++
+        const randX = Phaser.Math.Between(game.config.width/4,game.config.width/1.1)
+        this.tweens.add({targets: shuttlecock,duration:2000,x:randX});
     }
     statusHitToFalse() {
         this.hitStatus = false
@@ -120,22 +121,22 @@ class SceneMain extends Phaser.Scene {
         if (this.cursors.left.isDown && !this.showDone)
         {
             if(this.player.x <= game.config.width/5) return
-            this.player.x-=2;
+            this.player.x-=3;
         }
         else if (this.cursors.right.isDown && !this.showDone)
         {
             if(this.player.x >= game.config.width/1.25) return
-            this.player.x+=2;
+            this.player.x+=3;
         }
         else if (this.cursors.up.isDown && !this.showDone)
         {
-            if(this.player.y <= game.config.height/2.5) return
-            this.player.y-=2;
+            if(this.player.y <= game.config.height/2.2) return
+            this.player.y-=3;
         }
         else if (this.cursors.down.isDown && !this.showDone)
         {
             if(this.player.y >= game.config.height/1.3) return
-            this.player.y+=2;
+            this.player.y+=3;
         }
 
         if (this.keySpace.isDown && !this.showDone)
@@ -158,7 +159,6 @@ class SceneMain extends Phaser.Scene {
                 if(child.y>game.config.height) {
                     child.destroy()
                     this.enemyScore+=1
-                    this.updateText()
                 }
             }
         }.bind(this))
@@ -170,23 +170,30 @@ class SceneMain extends Phaser.Scene {
         if(this.shuttlecockGroup.children.entries.length===0 && !this.showDone) {
             this.showDone = true
             mt.mediaManager.stopMusic()
+            this.playerScore = this.maxCounter - this.enemyScore
+            const obj = {
+                "round" : mt.model.roundNumber,
+                "player" : this.playerScore,
+                "enemy" : this.enemyScore,
+                "time" : this.timer
+            }
+            mt.model.scoreAll.unshift(obj)
             if(this.playerScore>this.enemyScore) {
-                if(mt.model.respawnSpeed==500) {
-                    mt.model.respawnSpeed = 500
+                if(mt.model.respawnSpeed<=500) {
+                    if(mt.model.respawnSpeed==100) {
+                        mt.model.respawnSpeed=100
+                    } else {
+                        mt.model.respawnSpeed-=100
+                    }
                 } else {
                     mt.model.respawnSpeed-=500
                 }
-                const obj = {
-                    "round" : mt.model.roundNumber,
-                    "player" : this.playerScore,
-                    "enemy" : this.enemyScore,
-                    "time" : this.timer
-                }
-                mt.model.scoreAll.unshift(obj)
                 mt.model.roundNumber+=1
                 this.scene.start("SceneSummary")
+                mt.mediaManager.playSound("win")
             } else {
                 this.scene.start("SceneOver")
+                mt.mediaManager.playSound("lose")
             }
         }
     }

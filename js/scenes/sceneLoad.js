@@ -29,6 +29,9 @@ class SceneLoad extends Phaser.Scene {
         this.load.audio("swing", "audio/swing.mp3");
         this.load.audio("serve", "audio/serve.mp3");
         this.load.audio("background", "audio/background.mp3");
+
+        this.load.audio("win", "audio/win.mp3")
+        this.load.audio("lose", "audio/lose.mp3")
     }
     create() {
         mt.emitter = new Phaser.Events.EventEmitter();
