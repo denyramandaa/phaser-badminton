@@ -1,8 +1,7 @@
-class SceneOver extends Phaser.Scene {
+class SceneSummary extends Phaser.Scene {
     constructor() {
-        super('SceneOver');
+        super('SceneSummary');
     }
-    preload() {}
     preload() {
         this.load.scenePlugin({
             key: 'rexuiplugin',
@@ -25,7 +24,7 @@ class SceneOver extends Phaser.Scene {
         });
     //    this.aGrid.showNumbers();
         
-       this.titleText = this.add.text(0, 0, "Game Over", {
+       this.titleText = this.add.text(0, 0, "Summary", {
             fontSize: game.config.width / 10,
             color: "#000",
             align: 'center',
@@ -114,28 +113,12 @@ class SceneOver extends Phaser.Scene {
             key: "gold",
             event: mt.constants.START_GAME,
             params: this.scene,
-            text: "Main Lagi",
+            text: "Set Berikutnya",
             scale: .35,
             textScale: 30,
             textColor: '#833400'
         });
-        this.aGrid.placeAtIndex(102, this.btnStart);
-
-        this.btnStart = new TextButton({
-            scene: this,
-            key: "gold",
-            event: mt.constants.SHOW_TITLE,
-            params: this.scene,
-            text: "Menu",
-            scale: .35,
-            textScale: 30,
-            textColor: '#833400'
-        });
-        this.aGrid.placeAtIndex(106, this.btnStart);
-        
-        mt.model.roundNumber=1
-        mt.model.respawnSpeed = 2000
-        mt.model.scoreAll = []
+        this.aGrid.placeAtIndex(104, this.btnStart);
     }
     
     createRowItem(scene, config) {

@@ -15,7 +15,7 @@ class SceneMain extends Phaser.Scene {
         this.gameIsDone = false
         this.showDone = false
         this.holdHitPoint = false
-        this.maxCounter = 10
+        this.maxCounter = 21
         this.timer = 0
 
 
@@ -56,7 +56,7 @@ class SceneMain extends Phaser.Scene {
             repeat: 0
         });
 
-        this.cursors = game.input.keyboard.createCursorKeys();
+        this.cursors = this.input.keyboard.createCursorKeys();
         this.keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         this.physics.add.overlap(this.player, this.shuttlecockGroup, this.hitBall, null, this)
@@ -107,10 +107,10 @@ class SceneMain extends Phaser.Scene {
         Align.scaleToGameW(shuttlecock, .025);
         mt.mediaManager.playSound("serve")
 
-        const randVelo = Phaser.Math.Between(100, 200)
+        const randVelo = Phaser.Math.Between(150, 220)
         shuttlecock.setVelocityY(randVelo)
         const randX = Phaser.Math.Between(game.config.width/5,game.config.width/1.25)
-        this.tweens.add({targets: shuttlecock,duration: 5000,x:randX});
+        this.tweens.add({targets: shuttlecock,duration:2500,x:randX});
         this.shuttlecockCounter++
     }
     statusHitToFalse() {
@@ -120,12 +120,12 @@ class SceneMain extends Phaser.Scene {
         if (this.cursors.left.isDown && !this.showDone)
         {
             if(this.player.x <= game.config.width/5) return
-            this.player.x-=4;
+            this.player.x-=2;
         }
         else if (this.cursors.right.isDown && !this.showDone)
         {
             if(this.player.x >= game.config.width/1.25) return
-            this.player.x+=4;
+            this.player.x+=2;
         }
         else if (this.cursors.up.isDown && !this.showDone)
         {
@@ -169,10 +169,24 @@ class SceneMain extends Phaser.Scene {
         }
         if(this.shuttlecockGroup.children.entries.length===0 && !this.showDone) {
             this.showDone = true
+            mt.mediaManager.stopMusic()
             if(this.playerScore>this.enemyScore) {
-                console.log('WIN!')
+                if(mt.model.respawnSpeed==500) {
+                    mt.model.respawnSpeed = 500
+                } else {
+                    mt.model.respawnSpeed-=500
+                }
+                const obj = {
+                    "round" : mt.model.roundNumber,
+                    "player" : this.playerScore,
+                    "enemy" : this.enemyScore,
+                    "time" : this.timer
+                }
+                mt.model.scoreAll.unshift(obj)
+                mt.model.roundNumber+=1
+                this.scene.start("SceneSummary")
             } else {
-                console.log('LOSE!')
+                this.scene.start("SceneOver")
             }
         }
     }

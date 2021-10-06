@@ -1,8 +1,9 @@
 class Model {
     constructor() {
-        this.numberOfColors = 4;
         this.score = 0;
         this.respawnSpeed = 2000
+        this.scoreAll = []
+        this.roundNumber = 1
         
         this._musicOn = true;
         this._sfxOn = true;
