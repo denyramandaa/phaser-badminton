@@ -23,6 +23,7 @@ class SceneLoad extends Phaser.Scene {
         
         this.load.image("court", "images/court.jpg");
         this.load.image("shuttlecock", "images/shuttlecock.png");
+        this.load.image("instruction", "images/instruction.jpg");
         this.load.spritesheet("player", "images/player.png", {frameWidth: 100, frameHeight:178});
 
         this.load.audio("hit", "audio/hit.mp3");

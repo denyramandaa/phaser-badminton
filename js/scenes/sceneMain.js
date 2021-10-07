@@ -4,7 +4,8 @@ class SceneMain extends Phaser.Scene {
     }
     preload()
     {
-        
+        const url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js';
+        this.load.plugin('rexvirtualjoystickplugin', url, true);
     }
     create() {
         mt.mediaManager.setBackground("background")
@@ -49,7 +50,7 @@ class SceneMain extends Phaser.Scene {
        Align.scaleToGameW(this.player, .15);
        this.aGrid.placeAtIndex(71, this.player);
 
-       this.anims.create({
+        this.anims.create({
             key: 'hit',
             frames: [
                 { key: 'player',frame:0 },
@@ -68,6 +69,46 @@ class SceneMain extends Phaser.Scene {
         this.timerText=this.add.text(0,0,"Timer: 0")
         this.timerText.setOrigin(0.5,0.5)
         this.aGrid.placeAtIndex(2, this.timerText)
+
+        this.joyStick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
+            x: 0,
+            y: 0,
+            radius: 50,
+            base: this.add.circle(0, 0, 50, 0x888888),
+            thumb: this.add.circle(0, 0, 25, 0xcccccc),
+            // dir: '8dir',   // 'up&down'|0|'left&right'|1|'4dir'|2|'8dir'|3
+            // forceMin: 16,
+            // enable: true
+        })
+        .on('update', this.dumpJoyStickState, this);
+        
+        this.aGrid.placeAtIndex(101, this.joyStick)
+
+        this.text = this.add.text(0, 0);
+        this.dumpJoyStickState();
+    }
+    dumpJoyStickState() {
+        var cursorKeys = this.joyStick.createCursorKeys();
+        var s = 'Key down: ';
+        for (var name in cursorKeys) {
+            if (cursorKeys[name].isDown) {
+                console.log(name)
+                switch(name) {
+                    case 'up' :
+                        if(this.player.y >= game.config.height/2.2) this.player.y-=3;
+                    break;
+                    case 'down' :
+                        if(this.player.y <= game.config.height/1.3) this.player.y+=3;
+                    break;
+                    case 'left' :
+                        if(this.player.x >= game.config.width/5) this.player.x-=3;
+                    break;
+                    case 'right' :
+                        if(this.player.x <= game.config.width/1.25) this.player.x+=3;
+                    break;
+                }
+            }
+        }
     }
     timerCount() {
         this.timer+=1

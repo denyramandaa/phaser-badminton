@@ -14,25 +14,25 @@ class SceneSettings extends Phaser.Scene {
             rows: 11,
             cols: 11
         });
-       // this.aGrid.showNumbers();
+    //    this.aGrid.showNumbers();
         //
         //
         this.btnSound = new TextButton({
             scene: this,
-            key: "green",
+            key: "gold",
             event: mt.constants.TOGGLE_SOUND,
             text: "",
             scale: .35,
             textScale: 30,
             textColor: '#000000'
         });
-        this.aGrid.placeAtIndex(16, this.btnSound);
+        this.aGrid.placeAtIndex(27, this.btnSound);
         //
         //
         //
         this.btnMusic = new TextButton({
             scene: this,
-            key: "green",
+            key: "gold",
             event: mt.constants.TOGGLE_MUSIC,
             text: "",
             scale: .35,
@@ -43,10 +43,10 @@ class SceneSettings extends Phaser.Scene {
 
         this.btnDone = new TextButton({
             scene: this,
-            key: "red",
+            key: "gold",
             event: mt.constants.SHOW_TITLE,
             params:this.scene,
-            text: "Done",
+            text: "Selesai",
             scale: .35,
             textScale: 30,
             textColor: '#000000'
