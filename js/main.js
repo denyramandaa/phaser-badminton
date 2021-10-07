@@ -1,9 +1,24 @@
 var game;
 var mt;
+var isMobile;
 
+
+// const PIXEL_RATIO = (function() {
+//     var ctx = document.createElement("canvas").getContext("2d"),
+//         dpr = window.devicePixelRatio || 1,
+
+//         // The backing store size in relation to the canvas element
+//         bsr = ctx.webkitBackingStorePixelRatio ||
+//         ctx.mozBackingStorePixelRatio ||
+//         ctx.msBackingStorePixelRatio ||
+//         ctx.oBackingStorePixelRatio ||
+//         ctx.backingStorePixelRatio || 1
+
+//     return dpr / bsr
+// })();
 window.onload = function() {
     document.getElementById('phaser-game').style.height = window.innerHeight+'px';
-    var isMobile = navigator.userAgent.indexOf("Mobile");
+    isMobile = navigator.userAgent.indexOf("Mobile");
     if (isMobile == -1) {
         isMobile = navigator.userAgent.indexOf("Tablet");
     }
@@ -19,6 +34,7 @@ window.onload = function() {
         type: Phaser.AUTO,
         width: w,
         height: h,
+        // resolution: PIXEL_RATIO,
         parent: 'phaser-game',
         scene: [SceneLoad, SceneTitle, SceneInstructions, SceneSettings, SceneMain, SceneOver, SceneSummary],
         physics: {

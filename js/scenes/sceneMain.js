@@ -83,6 +83,7 @@ class SceneMain extends Phaser.Scene {
         .on('update', this.dumpJoyStickState, this);
         
         this.aGrid.placeAtIndex(101, this.joyStick)
+        if(isMobile == -1) this.joyStick.visible  = false
 
         this.text = this.add.text(0, 0);
         this.dumpJoyStickState();
@@ -94,14 +95,13 @@ class SceneMain extends Phaser.Scene {
         this.hitbutton.setInteractive();
         this.hitbutton.on('pointerdown', this.hitting, this);
         this.hitbutton.on('pointerup', this.releasehitting, this);
-        // this.add(this.hitbutton);
+        if(isMobile == -1) this.hitbutton.visible  = false
     }
     dumpJoyStickState() {
         var cursorKeys = this.joyStick.createCursorKeys();
-        for (var name in cursorKeys) {
-            if (cursorKeys[name].isDown) {
-                console.log(name)
-                switch(name) {
+        for (var dir in cursorKeys) {
+            if (cursorKeys[dir].isDown) {
+                switch(dir) {
                     case 'up' :
                         if(this.player.y >= game.config.height/2.2) this.player.y-=4;
                     break;
