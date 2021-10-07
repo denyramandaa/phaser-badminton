@@ -1,6 +1,8 @@
 var game;
 var mt;
+
 window.onload = function() {
+    document.getElementById('phaser-game').style.height = window.innerHeight+'px';
     var isMobile = navigator.userAgent.indexOf("Mobile");
     if (isMobile == -1) {
         isMobile = navigator.userAgent.indexOf("Tablet");

@@ -89,22 +89,21 @@ class SceneMain extends Phaser.Scene {
     }
     dumpJoyStickState() {
         var cursorKeys = this.joyStick.createCursorKeys();
-        var s = 'Key down: ';
         for (var name in cursorKeys) {
             if (cursorKeys[name].isDown) {
                 console.log(name)
                 switch(name) {
                     case 'up' :
-                        if(this.player.y >= game.config.height/2.2) this.player.y-=3;
+                        if(this.player.y >= game.config.height/2.2) this.player.y-=4;
                     break;
                     case 'down' :
-                        if(this.player.y <= game.config.height/1.3) this.player.y+=3;
+                        if(this.player.y <= game.config.height/1.3) this.player.y+=4;
                     break;
                     case 'left' :
-                        if(this.player.x >= game.config.width/5) this.player.x-=3;
+                        if(this.player.x >= game.config.width/5) this.player.x-=4;
                     break;
                     case 'right' :
-                        if(this.player.x <= game.config.width/1.25) this.player.x+=3;
+                        if(this.player.x <= game.config.width/1.25) this.player.x+=4;
                     break;
                 }
             }
