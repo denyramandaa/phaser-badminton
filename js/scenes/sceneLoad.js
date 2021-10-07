@@ -19,6 +19,7 @@ class SceneLoad extends Phaser.Scene {
         this.load.image("green", "images/buttons/green.png");
         this.load.image("gold", "images/buttons/gold.png");
         this.load.image("sample", "images/sample.png");
+        this.load.image("hitbutton", "images/buttons/hit.png");
 
         
         this.load.image("court", "images/court.jpg");

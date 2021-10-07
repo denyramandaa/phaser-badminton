@@ -86,6 +86,15 @@ class SceneMain extends Phaser.Scene {
 
         this.text = this.add.text(0, 0);
         this.dumpJoyStickState();
+
+        this.hitbutton = this.add.image(0,0,"hitbutton")
+        this.hitbutton.setOrigin(0.5, 0.5);
+        Align.scaleToGameW(this.hitbutton, .15);
+        this.aGrid.placeAtIndex(107, this.hitbutton);
+        this.hitbutton.setInteractive();
+        this.hitbutton.on('pointerdown', this.hitting, this);
+        this.hitbutton.on('pointerup', this.releasehitting, this);
+        // this.add(this.hitbutton);
     }
     dumpJoyStickState() {
         var cursorKeys = this.joyStick.createCursorKeys();
@@ -157,6 +166,20 @@ class SceneMain extends Phaser.Scene {
     statusHitToFalse() {
         this.hitStatus = false
     }
+    hitting() {
+        if(!this.holdHitPoint) {
+            this.hitStatus = true
+            this.holdHitPoint = true
+            this.player.play('hit', true);
+            mt.mediaManager.playSound("swing")
+            this.player.on('animationcomplete', this.statusHitToFalse);
+        } else {
+            this.hitStatus = false
+        }
+    }
+    releasehitting() {
+        this.holdHitPoint = false
+    }
     update() {
         if (this.cursors.left.isDown && !this.showDone)
         {
@@ -181,17 +204,9 @@ class SceneMain extends Phaser.Scene {
 
         if (this.keySpace.isDown && !this.showDone)
         {
-            if(!this.holdHitPoint) {
-                this.hitStatus = true
-                this.holdHitPoint = true
-                this.player.play('hit', true);
-                mt.mediaManager.playSound("swing")
-                this.player.on('animationcomplete', this.statusHitToFalse);
-            } else {
-                this.hitStatus = false
-            }
+            this.hitting()
         } else if(this.keySpace.isUp) {
-            this.holdHitPoint = false
+            this.releasehitting()
         }
 
         this.shuttlecockGroup.children.iterate(function(child) {
